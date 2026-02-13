@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>贪吃蛇小游戏 - 特殊食物版</title>
+    <title>贪吃蛇小游戏 - 特殊方塊版</title>
     <style>
         * {
             margin: 0;
@@ -41,6 +41,7 @@
             font-size: 2.8rem;
             margin-bottom: 5px;
             background: linear-gradient(90deg, #0ea5e9, #10b981);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -61,6 +62,13 @@
         
         .game-container {
             position: relative;
+            transition: border 0.3s ease;
+        }
+        
+        .double-score-active {
+            border: 3px solid #f59e0b;
+            border-radius: 10px;
+            animation: borderPulse 1s infinite;
         }
         
         #game-board {
@@ -106,6 +114,186 @@
             border-top: 1px solid #334155;
             display: flex;
             justify-content: space-between;
+        }
+        
+        .timer-container {
+            background-color: rgba(15, 23, 42, 0.8);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .timer-title {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .timer-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            border-left: 4px solid;
+        }
+        
+        .timer-item.red {
+            border-left-color: #ef4444;
+        }
+        
+        .timer-item.double {
+            border-left-color: #f59e0b;
+        }
+        
+        .timer-item.gold {
+            border-left-color: #ffd700;
+        }
+        
+        .timer-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+        }
+        
+        .timer-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .timer-dot.red {
+            background-color: #ef4444;
+            box-shadow: 0 0 8px #ef4444;
+        }
+        
+        .timer-dot.orange {
+            background-color: #f59e0b;
+            box-shadow: 0 0 8px #f59e0b;
+        }
+        
+        .timer-dot.gold {
+            background-color: #ffd700;
+            box-shadow: 0 0 8px #ffd700;
+        }
+        
+        .timer-progress {
+            flex: 1;
+            height: 6px;
+            background-color: #1e293b;
+            border-radius: 3px;
+            margin: 0 12px;
+            overflow: hidden;
+        }
+        
+        .timer-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 3px;
+            transition: width 0.1s linear;
+        }
+        
+        .timer-bar.red { background-color: #ef4444; }
+        .timer-bar.orange { background-color: #f59e0b; }
+        .timer-bar.gold { background-color: #ffd700; }
+        
+        .timer-value {
+            font-family: monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: right;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @keyframes borderPulse {
+            0%, 100% { border-color: #f59e0b; box-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
+            50% { border-color: #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 5px gold); }
+            50% { filter: drop-shadow(0 0 20px gold); }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .special-foods {
+            background-color: rgba(15, 23, 42, 0.8);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .special-foods h3 {
+            color: #94a3b8;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .food-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .food-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .food-item.mystery {
+            background: linear-gradient(45deg, rgba(255,215,0,0.2), rgba(255,165,0,0.2));
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .food-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .food-info {
+            flex: 1;
+        }
+        
+        .food-name {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .food-effect {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+        }
+        
+        .food-score {
+            font-weight: bold;
+            color: #fbbf24;
         }
         
         .controls {
@@ -198,61 +386,6 @@
             font-size: 1.5rem;
             margin-bottom: 30px;
             color: #e2e8f0;
-        }
-        
-        .special-foods {
-            background-color: rgba(15, 23, 42, 0.8);
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .special-foods h3 {
-            color: #94a3b8;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-        
-        .food-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid #334155;
-        }
-        
-        .food-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-        
-        .food-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            margin-right: 10px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .food-info {
-            flex: 1;
-        }
-        
-        .food-name {
-            font-weight: bold;
-            margin-bottom: 3px;
-        }
-        
-        .food-effect {
-            font-size: 0.85rem;
-            color: #cbd5e1;
-        }
-        
-        .food-score {
-            font-weight: bold;
-            color: #fbbf24;
         }
         
         .instructions {
@@ -374,32 +507,25 @@
             }
         }
         
-        .snake-segment {
-            background-color: #10b981;
-            border-radius: 3px;
-        }
-        
-        .snake-head {
-            background-color: #0ea5e9;
-            border-radius: 5px;
-        }
-        
-        .food {
-            background-color: #ef4444;
-            border-radius: 50%;
+        @supports not (background-clip: text) {
+            h1 {
+                color: #0ea5e9;
+                background: none;
+                -webkit-text-fill-color: initial;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>贪吃蛇小游戏 - 特殊食物版</h1>
-            <p class="subtitle">收集特殊食物获得额外效果和分数！</p>
+            <h1>贪吃蛇 - 特殊方塊版</h1>
+            <p class="subtitle">紅色方塊、雙倍得分、神秘金色方塊！</p>
         </div>
         
         <div class="game-area">
             <div class="game-container">
-                <canvas id="game-board"></canvas>
+                <canvas id="game-board" width="400" height="400"></canvas>
                 <div id="effect-notification"></div>
                 <div id="game-over">
                     <h2>游戏结束!</h2>
@@ -415,6 +541,42 @@
                     <div class="high-score">
                         <span>最高分:</span>
                         <span id="high-score">0</span>
+                    </div>
+                </div>
+                
+                <div class="timer-container">
+                    <div class="timer-title">
+                        <span>⏱️ 特殊事件計時器</span>
+                    </div>
+                    <div class="timer-item red" id="timer-red">
+                        <div class="timer-label">
+                            <span class="timer-dot red"></span>
+                            <span>紅色方塊</span>
+                        </div>
+                        <div class="timer-progress">
+                            <div class="timer-bar red" id="timer-red-bar" style="width: 0%;"></div>
+                        </div>
+                        <span class="timer-value" id="timer-red-text">0s</span>
+                    </div>
+                    <div class="timer-item double" id="timer-double">
+                        <div class="timer-label">
+                            <span class="timer-dot orange"></span>
+                            <span>雙倍得分</span>
+                        </div>
+                        <div class="timer-progress">
+                            <div class="timer-bar orange" id="timer-double-bar" style="width: 0%;"></div>
+                        </div>
+                        <span class="timer-value" id="timer-double-text">0s</span>
+                    </div>
+                    <div class="timer-item gold" id="timer-gold">
+                        <div class="timer-label">
+                            <span class="timer-dot gold"></span>
+                            <span>神秘金色</span>
+                        </div>
+                        <div class="timer-progress">
+                            <div class="timer-bar gold" id="timer-gold-bar" style="width: 0%;"></div>
+                        </div>
+                        <span class="timer-value" id="timer-gold-text">0s</span>
                     </div>
                 </div>
                 
@@ -451,6 +613,30 @@
                             <div class="food-effect">+5分，长度-1（最少3节）</div>
                         </div>
                         <div class="food-score">+5</div>
+                    </div>
+                    <div class="food-item mystery">
+                        <div class="food-color" style="background-color: #ef4444; animation: pulse 1s infinite;"></div>
+                        <div class="food-info">
+                            <div class="food-name">紅色方塊 ⏱️</div>
+                            <div class="food-effect">每10秒出現，+10分（雙倍期間+20）</div>
+                        </div>
+                        <div class="food-score">+10</div>
+                    </div>
+                    <div class="food-item mystery">
+                        <div class="food-color" style="background-color: #f59e0b; animation: borderPulse 1s infinite;"></div>
+                        <div class="food-info">
+                            <div class="food-name">雙倍得分時段 🚀</div>
+                            <div class="food-effect">每20秒啟動，持續15秒，所有食物雙倍分數</div>
+                        </div>
+                        <div class="food-score">×2</div>
+                    </div>
+                    <div class="food-item mystery">
+                        <div class="food-color" style="background-color: #ffd700; animation: glow 1.5s infinite;"></div>
+                        <div class="food-info">
+                            <div class="food-name">神秘金色方塊 👑</div>
+                            <div class="food-effect">1分鐘後每20秒出現，直接+500分！</div>
+                        </div>
+                        <div class="food-score">+500</div>
                     </div>
                 </div>
                 
@@ -494,30 +680,32 @@
             <h3>游戏规则</h3>
             <ul>
                 <li>使用方向键控制贪吃蛇移动</li>
-                <li>收集不同颜色的食物获得不同效果</li>
-                <li><span style="color: #ef4444;">红色食物</span>：+10分，长度+1</li>
-                <li><span style="color: #fbbf24;">金色食物</span>：+30分，长度+3</li>
-                <li><span style="color: #60a5fa;">蓝色食物</span>：+15分，减速20%持续5秒</li>
-                <li><span style="color: #a855f7;">紫色食物</span>：+5分，长度-1（最少3节）</li>
+                <li>收集不同顏色的食物獲得不同效果</li>
+                <li><span style="color: #ef4444;">🔴 紅色方塊</span>：每10秒出現，+10分（雙倍時段+20分）</li>
+                <li><span style="color: #f59e0b;">🚀 雙倍得分</span>：每20秒啟動，持續15秒，所有食物分數×2</li>
+                <li><span style="color: #ffd700;">👑 神秘金色</span>：1分鐘後每20秒出現，+500分！</li>
+                <li><span style="color: #fbbf24;">金色食物</span>：+30分，長度+3（隨機出現）</li>
+                <li><span style="color: #60a5fa;">藍色食物</span>：+15分，減速20%持續5秒</li>
+                <li><span style="color: #a855f7;">紫色食物</span>：+5分，長度-1（最少3節）</li>
                 <li>撞到墙壁或自己的身体会导致游戏结束</li>
-                <li>游戏速度会随着得分增加而逐渐加快</li>
-                <li>尽可能获得高分！</li>
             </ul>
         </div>
     </div>
 
     <script>
-        // 游戏常量
+        // 遊戲常量
         const BOARD_SIZE = 400;
         const GRID_SIZE = 20;
         const CELL_SIZE = BOARD_SIZE / GRID_SIZE;
         
-        // 食物类型常量
+        // 食物類型常量
         const FOOD_TYPES = {
-            NORMAL: 'normal',     // 普通食物
-            GOLDEN: 'golden',     // 金色食物
-            BLUE: 'blue',         // 蓝色食物
-            PURPLE: 'purple'      // 紫色食物
+            NORMAL: 'normal',
+            GOLDEN: 'golden',
+            BLUE: 'blue',
+            PURPLE: 'purple',
+            RED_SPECIAL: 'red_special',
+            GOLD_MYSTERY: 'gold_mystery'
         };
         
         // 食物配置
@@ -526,51 +714,74 @@
                 color: '#ef4444',
                 score: 10,
                 lengthEffect: 1,
-                probability: 0.8,  // 80% 概率
-                lifetime: Infinity // 永久存在
+                probability: 0.8,
+                lifetime: Infinity
             },
             [FOOD_TYPES.GOLDEN]: {
                 color: '#fbbf24',
                 score: 30,
                 lengthEffect: 3,
-                probability: 0.07, // 7% 概率
-                lifetime: 10000    // 10秒
+                probability: 0.07,
+                lifetime: 10000
             },
             [FOOD_TYPES.BLUE]: {
                 color: '#60a5fa',
                 score: 15,
                 lengthEffect: 1,
-                probability: 0.07, // 7% 概率
-                lifetime: 10000,   // 10秒
-                speedEffect: -0.2, // 减速20%
-                speedDuration: 5000 // 持续5秒
+                probability: 0.07,
+                lifetime: 10000,
+                speedEffect: -0.2,
+                speedDuration: 5000
             },
             [FOOD_TYPES.PURPLE]: {
                 color: '#a855f7',
                 score: 5,
-                lengthEffect: -1,  // 减少长度
-                probability: 0.06, // 6% 概率
-                lifetime: 10000    // 10秒
+                lengthEffect: -1,
+                probability: 0.06,
+                lifetime: 10000
+            },
+            [FOOD_TYPES.RED_SPECIAL]: {
+                color: '#ef4444',
+                score: 10,
+                lengthEffect: 1,
+                probability: 0,
+                lifetime: 5000
+            },
+            [FOOD_TYPES.GOLD_MYSTERY]: {
+                color: '#ffd700',
+                score: 500,
+                lengthEffect: 5,
+                probability: 0,
+                lifetime: 8000
             }
         };
         
-        // 游戏变量
+        // 遊戲變數
         let canvas, ctx;
         let snake = [];
         let food = {};
         let direction = 'right';
         let nextDirection = 'right';
-        let gameSpeed = 150; // 初始速度（毫秒）
-        let baseSpeed = 150; // 基础速度
+        let gameSpeed = 150;
+        let baseSpeed = 150;
         let score = 0;
         let highScore = localStorage.getItem('snakeHighScore') || 0;
         let gameRunning = false;
         let gameLoop;
         let gamePaused = false;
-        let speedEffectEndTime = 0; // 速度效果结束时间
-        let foodCreationTime = 0; // 食物创建时间
-        let foodBlinkState = false; // 食物闪烁状态
-        let foodBlinkInterval; // 食物闪烁间隔
+        let speedEffectEndTime = 0;
+        let foodCreationTime = 0;
+        let foodBlinkState = false;
+        let foodBlinkInterval;
+        
+        // 特殊系統變數
+        let gameStartTime = 0;
+        let doubleScoreActive = false;
+        let doubleScoreEndTime = 0;
+        let lastDoubleScoreTime = 0;
+        let lastRedFoodTime = 0;
+        let lastGoldFoodTime = 0;
+        let gameMinutesPassed = 0;
         
         // DOM 元素
         const scoreElement = document.getElementById('score');
@@ -587,47 +798,49 @@
         const leftButton = document.querySelector('.mobile-btn.left');
         const rightButton = document.querySelector('.mobile-btn.right');
         
-        // 初始化游戏
+        // 計時器元素
+        let timerRedBar, timerRedText;
+        let timerDoubleBar, timerDoubleText;
+        let timerGoldBar, timerGoldText;
+        let gameBoardContainer;
+        
+        // 初始化遊戲
         function init() {
             canvas = document.getElementById('game-board');
             canvas.width = BOARD_SIZE;
             canvas.height = BOARD_SIZE;
             ctx = canvas.getContext('2d');
             
-            // 显示最高分
             highScoreElement.textContent = highScore;
             
-            // 初始化蛇
+            gameBoardContainer = document.querySelector('.game-container');
+            timerRedBar = document.getElementById('timer-red-bar');
+            timerRedText = document.getElementById('timer-red-text');
+            timerDoubleBar = document.getElementById('timer-double-bar');
+            timerDoubleText = document.getElementById('timer-double-text');
+            timerGoldBar = document.getElementById('timer-gold-bar');
+            timerGoldText = document.getElementById('timer-gold-text');
+            
             resetSnake();
-            
-            // 生成食物
             generateFood();
-            
-            // 绘制初始游戏状态
             draw();
-            
-            // 添加事件监听器
             setupEventListeners();
         }
         
-        // 设置事件监听器
+        // 設置事件監聽器
         function setupEventListeners() {
-            // 键盘控制
             document.addEventListener('keydown', handleKeyPress);
             
-            // 按钮控制
             startButton.addEventListener('click', startGame);
             pauseButton.addEventListener('click', togglePause);
             restartButton.addEventListener('click', resetGame);
             playAgainButton.addEventListener('click', resetGame);
             
-            // 移动端控制
             upButton.addEventListener('click', () => changeDirection('up'));
             downButton.addEventListener('click', () => changeDirection('down'));
             leftButton.addEventListener('click', () => changeDirection('left'));
             rightButton.addEventListener('click', () => changeDirection('right'));
             
-            // 触摸控制（防止移动端滑动）
             document.addEventListener('touchstart', function(e) {
                 if (e.target === canvas) {
                     e.preventDefault();
@@ -635,7 +848,29 @@
             }, { passive: false });
         }
         
-        // 处理键盘按键
+        // 重置特殊系統
+        function resetSpecialSystem() {
+            gameStartTime = Date.now();
+            doubleScoreActive = false;
+            doubleScoreEndTime = 0;
+            lastDoubleScoreTime = 0;
+            lastRedFoodTime = 0;
+            lastGoldFoodTime = 0;
+            gameMinutesPassed = 0;
+            
+            if (timerDoubleBar) timerDoubleBar.style.width = '0%';
+            if (timerDoubleText) timerDoubleText.textContent = '0s';
+            if (timerRedBar) timerRedBar.style.width = '0%';
+            if (timerRedText) timerRedText.textContent = '0s';
+            if (timerGoldBar) timerGoldBar.style.width = '0%';
+            if (timerGoldText) timerGoldText.textContent = '0s';
+            
+            if (gameBoardContainer) {
+                gameBoardContainer.classList.remove('double-score-active');
+            }
+        }
+        
+        // 處理鍵盤按鍵
         function handleKeyPress(event) {
             switch(event.key) {
                 case 'ArrowUp':
@@ -666,9 +901,8 @@
             }
         }
         
-        // 改变方向
+        // 改變方向
         function changeDirection(newDirection) {
-            // 防止直接反向移动
             if (
                 (newDirection === 'up' && direction !== 'down') ||
                 (newDirection === 'down' && direction !== 'up') ||
@@ -679,23 +913,21 @@
             }
         }
         
-        // 开始游戏
+        // 開始遊戲
         function startGame() {
             if (!gameRunning) {
+                resetSpecialSystem();
                 gameRunning = true;
                 gamePaused = false;
                 startButton.disabled = true;
                 pauseButton.textContent = '暂停游戏';
                 
-                // 开始游戏循环
                 gameLoop = setInterval(update, gameSpeed);
-                
-                // 开始食物闪烁
                 startFoodBlink();
             }
         }
         
-        // 切换暂停状态
+        // 切換暫停狀態
         function togglePause() {
             if (!gameRunning) return;
             
@@ -723,13 +955,11 @@
             nextDirection = 'right';
         }
         
-        // 重置游戏
+        // 重置遊戲
         function resetGame() {
-            // 清除游戏循环
             clearInterval(gameLoop);
             clearInterval(foodBlinkInterval);
             
-            // 重置游戏变量
             resetSnake();
             score = 0;
             gameSpeed = 150;
@@ -738,20 +968,19 @@
             gameRunning = false;
             gamePaused = false;
             
-            // 更新UI
             scoreElement.textContent = score;
             startButton.disabled = false;
             pauseButton.textContent = '暂停游戏';
             gameOverElement.style.display = 'none';
             effectNotificationElement.innerHTML = '';
             
-            // 生成新食物并绘制
+            resetSpecialSystem();
             generateFood();
             startFoodBlink();
             draw();
         }
         
-        // 开始食物闪烁效果
+        // 開始食物閃爍效果
         function startFoodBlink() {
             clearInterval(foodBlinkInterval);
             foodBlinkInterval = setInterval(() => {
@@ -764,11 +993,11 @@
             let foodOnSnake;
             let foodType;
             
-            // 根据概率选择食物类型
             const rand = Math.random();
             let cumulativeProbability = 0;
             
             for (const type in FOOD_CONFIG) {
+                if (type === FOOD_TYPES.RED_SPECIAL || type === FOOD_TYPES.GOLD_MYSTERY) continue;
                 cumulativeProbability += FOOD_CONFIG[type].probability;
                 if (rand <= cumulativeProbability) {
                     foodType = type;
@@ -785,7 +1014,6 @@
                     config: FOOD_CONFIG[foodType]
                 };
                 
-                // 检查食物是否生成在蛇身上
                 for (let segment of snake) {
                     if (segment.x === food.x && segment.y === food.y) {
                         foodOnSnake = true;
@@ -794,156 +1022,222 @@
                 }
             } while (foodOnSnake);
             
-            // 记录食物生成时间
             foodCreationTime = Date.now();
         }
         
-        // 检查食物是否过期
+        // 生成特殊食物
+        function generateSpecialFood(type) {
+            if (!gameRunning || gamePaused) return;
+            
+            let foodOnSnake;
+            let newFood;
+            
+            do {
+                foodOnSnake = false;
+                newFood = {
+                    x: Math.floor(Math.random() * GRID_SIZE),
+                    y: Math.floor(Math.random() * GRID_SIZE),
+                    type: type,
+                    config: { ...FOOD_CONFIG[type] }
+                };
+                
+                if (type === FOOD_TYPES.RED_SPECIAL && doubleScoreActive) {
+                    newFood.config.score = 20;
+                }
+                
+                for (let segment of snake) {
+                    if (segment.x === newFood.x && segment.y === newFood.y) {
+                        foodOnSnake = true;
+                        break;
+                    }
+                }
+            } while (foodOnSnake);
+            
+            food = newFood;
+            foodCreationTime = Date.now();
+        }
+        
+        // 檢查食物是否過期
         function isFoodExpired() {
             if (food.config.lifetime === Infinity) return false;
             return Date.now() - foodCreationTime > food.config.lifetime;
         }
         
-        // 更新游戏状态
-        function update() {
-            // 检查食物是否过期
-            if (isFoodExpired()) {
-                generateFood();
+        // 更新計時器
+        function updateTimers() {
+            if (!gameRunning || gamePaused) return;
+            
+            const now = Date.now();
+            const elapsedSeconds = Math.floor((now - gameStartTime) / 1000);
+            
+            // 紅色方塊計時器
+            const redCycle = elapsedSeconds % 10;
+            const redProgress = (redCycle / 10) * 100;
+            const timeToRed = 10 - redCycle;
+            
+            if (timerRedBar) {
+                timerRedBar.style.width = `${redProgress}%`;
+                timerRedText.textContent = `${timeToRed}s`;
             }
             
-            // 更新方向
-            direction = nextDirection;
-            
-            // 计算新的蛇头位置
-            const head = {...snake[0]};
-            
-            switch(direction) {
-                case 'up':
-                    head.y -= 1;
-                    break;
-                case 'down':
-                    head.y += 1;
-                    break;
-                case 'left':
-                    head.x -= 1;
-                    break;
-                case 'right':
-                    head.x += 1;
-                    break;
-            }
-            
-            // 检查是否撞墙
-            if (head.x < 0 || head.x >= GRID_SIZE || head.y < 0 || head.y >= GRID_SIZE) {
-                gameOver();
-                return;
-            }
-            
-            // 检查是否撞到自己
-            for (let segment of snake) {
-                if (segment.x === head.x && segment.y === head.y) {
-                    gameOver();
-                    return;
+            if (gameRunning && !gamePaused) {
+                const currentRedCycle = Math.floor(elapsedSeconds / 10);
+                if (currentRedCycle > lastRedFoodTime && elapsedSeconds > 0) {
+                    lastRedFoodTime = currentRedCycle;
+                    generateSpecialFood(FOOD_TYPES.RED_SPECIAL);
+                    showSystemNotification('🔴 紅色方塊出現了！', '#ef4444');
                 }
             }
             
-            // 将新的头部添加到蛇身
-            snake.unshift(head);
-            
-            // 检查是否吃到食物
-            if (head.x === food.x && head.y === food.y) {
-                // 应用食物效果
-                applyFoodEffect(food.type);
+            // 雙倍得分計時器
+            if (doubleScoreActive) {
+                const timeLeft = Math.max(0, doubleScoreEndTime - now);
+                const secondsLeft = Math.ceil(timeLeft / 1000);
+                const progress = (timeLeft / 15000) * 100;
                 
-                // 增加分数
-                score += food.config.score;
+                if (timerDoubleBar) {
+                    timerDoubleBar.style.width = `${progress}%`;
+                    timerDoubleText.textContent = `${secondsLeft}s`;
+                }
+                
+                if (timeLeft <= 0) {
+                    doubleScoreActive = false;
+                    gameBoardContainer.classList.remove('double-score-active');
+                    showSystemNotification('⏹️ 雙倍得分時段結束', '#94a3b8');
+                }
+            } else {
+                const doubleCycle = elapsedSeconds % 20;
+                const doubleProgress = (doubleCycle / 20) * 100;
+                const timeToDouble = 20 - doubleCycle;
+                
+                if (timerDoubleBar) {
+                    timerDoubleBar.style.width = `${doubleProgress}%`;
+                    timerDoubleText.textContent = `${timeToDouble}s`;
+                }
+                
+                if (gameRunning && !gamePaused && doubleCycle === 0 && elapsedSeconds > 0) {
+                    const currentDoubleCycle = Math.floor(elapsedSeconds / 20);
+                    if (currentDoubleCycle > lastDoubleScoreTime) {
+                        lastDoubleScoreTime = currentDoubleCycle;
+                        doubleScoreActive = true;
+                        doubleScoreEndTime = now + 15000;
+                        gameBoardContainer.classList.add('double-score-active');
+                        showSystemNotification('🚀 雙倍得分時段！分數×2', '#f59e0b');
+                    }
+                }
+            }
+            
+            // 神秘金色方塊
+            gameMinutesPassed = Math.floor(elapsedSeconds / 60);
+            
+            if (elapsedSeconds >= 60) {
+                const goldCycle = (elapsedSeconds - 60) % 20;
+                const goldProgress = (goldCycle / 20) * 100;
+                const timeToGold = 20 - goldCycle;
+                
+                if (timerGoldBar) {
+                    timerGoldBar.style.width = `${goldProgress}%`;
+                    timerGoldText.textContent = `${timeToGold}s`;
+                }
+                
+                if (gameRunning && !gamePaused) {
+                    const currentGoldCycle = Math.floor((elapsedSeconds - 60) / 20);
+                    if (currentGoldCycle > lastGoldFoodTime) {
+                        lastGoldFoodTime = currentGoldCycle;
+                        generateSpecialFood(FOOD_TYPES.GOLD_MYSTERY);
+                        showSystemNotification('🌟 神秘金色方塊！+500分', '#ffd700');
+                    }
+                }
+            } else {
+                const timeToFirstGold = 60 - elapsedSeconds;
+                if (timerGoldBar) {
+                    timerGoldBar.style.width = `${(elapsedSeconds / 60) * 100}%`;
+                    timerGoldText.textContent = `${timeToFirstGold}s`;
+                }
+            }
+        }
+        
+        // 系統通知
+        function showSystemNotification(text, color) {
+            const notification = document.createElement('div');
+            notification.className = 'effect-notification';
+            notification.textContent = text;
+            notification.style.color = color;
+            notification.style.opacity = '1';
+            notification.style.fontSize = '1.4rem';
+            
+            effectNotificationElement.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translate(-50%, -100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 500);
+            }, 2000);
+        }
+        
+        // 應用食物效果
+        function applyFoodEffect(foodType) {
+            const config = FOOD_CONFIG[foodType];
+            
+            if (foodType === FOOD_TYPES.PURPLE) {
+                if (snake.length > 3) {
+                    snake.pop();
+                }
+            } else if (config.lengthEffect > 0) {
+                for (let i = 0; i < config.lengthEffect; i++) {
+                    const lastSegment = {...snake[snake.length - 1]};
+                    snake.push(lastSegment);
+                }
+            }
+            
+            if (foodType === FOOD_TYPES.BLUE && config.speedEffect) {
+                speedEffectEndTime = Date.now() + config.speedDuration;
+                const slowedSpeed = baseSpeed * (1 - Math.abs(config.speedEffect));
+                gameSpeed = Math.max(50, slowedSpeed);
+                
+                clearInterval(gameLoop);
+                gameLoop = setInterval(update, gameSpeed);
+            }
+            
+            if (doubleScoreActive && foodType !== FOOD_TYPES.RED_SPECIAL) {
+                score += config.score;
                 scoreElement.textContent = score;
                 
-                // 更新最高分
                 if (score > highScore) {
                     highScore = score;
                     highScoreElement.textContent = highScore;
                     localStorage.setItem('snakeHighScore', highScore);
                 }
                 
-                // 显示效果通知
-                showEffectNotification(food.type, food.config.score);
-                
-                // 生成新食物
-                generateFood();
-                
-                // 更新游戏速度（基于基础速度，不受临时效果影响）
-                updateGameSpeed();
-            } else {
-                // 如果没有吃到食物，移除尾部
-                snake.pop();
+                showSystemNotification(`✨ 雙倍加成 +${config.score}`, '#f59e0b');
             }
             
-            // 检查速度效果是否过期
-            if (speedEffectEndTime > 0 && Date.now() > speedEffectEndTime) {
-                speedEffectEndTime = 0;
-                // 恢复游戏速度
-                updateGameSpeed();
-            }
-            
-            // 绘制游戏
-            draw();
-        }
-        
-        // 应用食物效果
-        function applyFoodEffect(foodType) {
-            const config = FOOD_CONFIG[foodType];
-            
-            // 应用长度效果
-            if (foodType === FOOD_TYPES.PURPLE) {
-                // 紫色食物：减少长度（最少3节）
-                if (snake.length > 3) {
-                    snake.pop(); // 移除尾部一节
-                }
-            } else if (config.lengthEffect > 0) {
-                // 其他食物：增加长度
-                for (let i = 0; i < config.lengthEffect; i++) {
-                    // 复制最后一节添加到蛇身
-                    const lastSegment = {...snake[snake.length - 1]};
-                    snake.push(lastSegment);
-                }
-            }
-            
-            // 应用速度效果
-            if (foodType === FOOD_TYPES.BLUE && config.speedEffect) {
-                // 蓝色食物：减速效果
-                speedEffectEndTime = Date.now() + config.speedDuration;
-                
-                // 计算减速后的速度
-                const slowedSpeed = baseSpeed * (1 - Math.abs(config.speedEffect));
-                gameSpeed = Math.max(50, slowedSpeed); // 最低速度50ms
-                
-                // 更新游戏循环
-                clearInterval(gameLoop);
-                gameLoop = setInterval(update, gameSpeed);
+            if (foodType === FOOD_TYPES.GOLD_MYSTERY) {
+                showSystemNotification('🏆 超級加分！ +500', '#ffd700');
             }
         }
         
-        // 更新游戏速度（基于分数）
+        // 更新遊戲速度
         function updateGameSpeed() {
-            // 如果有速度效果，不更新基础速度
             if (speedEffectEndTime > Date.now()) return;
             
-            // 每得50分增加游戏速度
             const speedLevel = Math.floor(score / 50);
             const newBaseSpeed = Math.max(50, 150 - speedLevel * 10);
             
-            // 只有当基础速度改变时才更新
             if (newBaseSpeed !== baseSpeed) {
                 baseSpeed = newBaseSpeed;
                 gameSpeed = baseSpeed;
                 
-                // 更新游戏循环
                 clearInterval(gameLoop);
                 gameLoop = setInterval(update, gameSpeed);
             }
         }
         
-        // 显示效果通知
+        // 顯示效果通知
         function showEffectNotification(foodType, score) {
             const notification = document.createElement('div');
             notification.className = 'effect-notification';
@@ -968,6 +1262,14 @@
                     text = `长度缩短! +${score} 分`;
                     color = '#a855f7';
                     break;
+                case FOOD_TYPES.RED_SPECIAL:
+                    text = `紅色方塊! +${score} 分`;
+                    color = '#ef4444';
+                    break;
+                case FOOD_TYPES.GOLD_MYSTERY:
+                    text = `神秘金色! +${score} 分`;
+                    color = '#ffd700';
+                    break;
             }
             
             notification.textContent = text;
@@ -976,12 +1278,10 @@
             
             effectNotificationElement.appendChild(notification);
             
-            // 动画效果
             setTimeout(() => {
                 notification.style.opacity = '0';
                 notification.style.transform = 'translate(-50%, -100%)';
                 
-                // 动画结束后移除元素
                 setTimeout(() => {
                     if (notification.parentNode) {
                         notification.parentNode.removeChild(notification);
@@ -990,27 +1290,83 @@
             }, 1000);
         }
         
-        // 游戏结束
+        // 遊戲結束
         function gameOver() {
             clearInterval(gameLoop);
             clearInterval(foodBlinkInterval);
             gameRunning = false;
             startButton.disabled = false;
             
-            // 显示最终分数
             finalScoreElement.textContent = score;
-            
-            // 显示游戏结束界面
             gameOverElement.style.display = 'flex';
         }
         
-        // 绘制游戏
+        // 更新遊戲狀態
+        function update() {
+            if (isFoodExpired()) {
+                generateFood();
+            }
+            
+            updateTimers();
+            
+            direction = nextDirection;
+            
+            const head = {...snake[0]};
+            
+            switch(direction) {
+                case 'up': head.y -= 1; break;
+                case 'down': head.y += 1; break;
+                case 'left': head.x -= 1; break;
+                case 'right': head.x += 1; break;
+            }
+            
+            if (head.x < 0 || head.x >= GRID_SIZE || head.y < 0 || head.y >= GRID_SIZE) {
+                gameOver();
+                return;
+            }
+            
+            for (let segment of snake) {
+                if (segment.x === head.x && segment.y === head.y) {
+                    gameOver();
+                    return;
+                }
+            }
+            
+            snake.unshift(head);
+            
+            if (head.x === food.x && head.y === food.y) {
+                applyFoodEffect(food.type);
+                
+                score += food.config.score;
+                scoreElement.textContent = score;
+                
+                if (score > highScore) {
+                    highScore = score;
+                    highScoreElement.textContent = highScore;
+                    localStorage.setItem('snakeHighScore', highScore);
+                }
+                
+                showEffectNotification(food.type, food.config.score);
+                
+                generateFood();
+                updateGameSpeed();
+            } else {
+                snake.pop();
+            }
+            
+            if (speedEffectEndTime > 0 && Date.now() > speedEffectEndTime) {
+                speedEffectEndTime = 0;
+                updateGameSpeed();
+            }
+            
+            draw();
+        }
+        
+        // 繪製遊戲
         function draw() {
-            // 清空画布
             ctx.fillStyle = '#0f172a';
             ctx.fillRect(0, 0, BOARD_SIZE, BOARD_SIZE);
             
-            // 绘制网格
             ctx.strokeStyle = '#1e293b';
             ctx.lineWidth = 0.5;
             
@@ -1028,17 +1384,14 @@
                 ctx.stroke();
             }
             
-            // 绘制蛇
             snake.forEach((segment, index) => {
                 const x = segment.x * CELL_SIZE;
                 const y = segment.y * CELL_SIZE;
                 
                 if (index === 0) {
-                    // 蛇头
                     ctx.fillStyle = '#0ea5e9';
                     ctx.fillRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2);
                     
-                    // 蛇头眼睛
                     ctx.fillStyle = '#ffffff';
                     const eyeSize = 3;
                     if (direction === 'right') {
@@ -1055,41 +1408,34 @@
                         ctx.fillRect(x + CELL_SIZE - 8, y + CELL_SIZE - 6, eyeSize, eyeSize);
                     }
                 } else {
-                    // 蛇身
                     ctx.fillStyle = '#10b981';
                     ctx.fillRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2);
                     
-                    // 蛇身内部纹理
                     ctx.fillStyle = '#0da271';
                     ctx.fillRect(x + 4, y + 4, CELL_SIZE - 8, CELL_SIZE - 8);
                 }
             });
             
-            // 绘制食物
             const foodX = food.x * CELL_SIZE;
             const foodY = food.y * CELL_SIZE;
             const foodRadius = CELL_SIZE/2 - 2;
             
-            // 闪烁效果：特殊食物会闪烁
             let drawFood = true;
             if (food.type !== FOOD_TYPES.NORMAL && foodBlinkState) {
                 drawFood = false;
             }
             
             if (drawFood) {
-                // 食物主体
                 ctx.fillStyle = food.config.color;
                 ctx.beginPath();
                 ctx.arc(foodX + CELL_SIZE/2, foodY + CELL_SIZE/2, foodRadius, 0, Math.PI * 2);
                 ctx.fill();
                 
-                // 食物亮点效果
                 ctx.fillStyle = '#ffffff';
                 ctx.beginPath();
                 ctx.arc(foodX + CELL_SIZE/2 - 3, foodY + CELL_SIZE/2 - 3, 2, 0, Math.PI * 2);
                 ctx.fill();
                 
-                // 为特殊食物添加边框
                 if (food.type !== FOOD_TYPES.NORMAL) {
                     ctx.strokeStyle = '#ffffff';
                     ctx.lineWidth = 2;
@@ -1097,10 +1443,16 @@
                     ctx.arc(foodX + CELL_SIZE/2, foodY + CELL_SIZE/2, foodRadius + 1, 0, Math.PI * 2);
                     ctx.stroke();
                 }
+                
+                if (food.type === FOOD_TYPES.GOLD_MYSTERY) {
+                    ctx.save();
+                    ctx.translate(foodX + CELL_SIZE/2, foodY + CELL_SIZE/2);
+                    ctx.rotate(Date.now() / 200);
+                    ctx.restore();
+                }
             }
         }
         
-        // 页面加载完成后初始化游戏
         window.onload = init;
     </script>
 </body>
